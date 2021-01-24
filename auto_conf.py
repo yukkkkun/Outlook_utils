@@ -5,6 +5,7 @@ import tkinter as tk
 import win32com.client
 from datetime import datetime
 
+mode = "ZAITAKU"
 
 
 #######################################
@@ -35,7 +36,7 @@ def sendEmail():
 
 #   Msg.Send()
 
-def sendMeeting(dateandtime): 
+def sendMeeting(dateandtime, body): 
     str_dateandtime = str(dateandtime)   
     appt = outlook.CreateItem(1) # AppointmentItem
     appt.AllDayEvent = True
@@ -47,9 +48,26 @@ def sendMeeting(dateandtime):
     
     appt.Recipients.Add("test@test.com") # Don't end ; as delimiter
     
+    appt.Body = body
+
     appt.display(True)
     #   appt.Save()
     #   appt.Send()
+
+def add_outlook_schedule(start_time, duration, body):
+	APPOINTMENT_ITEM = 1
+
+	outlook = win32com.client.Dispatch("Outlook.Application")
+	mapi = outlook.GetNamespace("MAPI")
+	item = outlook.CreateItem(APPOINTMENT_ITEM)
+
+	item.Start = start_time
+	item.Duration = duration
+	item.Subject = '在宅：電話番号'
+	item.Body = body
+	item.ReminderMinutesBeforeStart = 0
+	item.ReminderSet = True
+	item.Save()
 
 
 def sendRecurringMeeting():    
@@ -69,6 +87,26 @@ def sendRecurringMeeting():
 
     #   appt.Save()
     #   appt.Send()
+
+
+#######################################
+###時短関数（こっからが本番）
+#######################################
+
+def zaitaku(dateandtime):
+    
+    body = '''
+    
+    在宅勤務をさせていただきます。
+    
+    
+    '''
+
+    sendMeeting(dateandtime, body)
+
+    start_time = dateandtime + ' 8:30'
+    duration = 540
+    add_outlook_schedule(start_time, duration, body)
 
 
 #######################################
@@ -203,7 +241,10 @@ def callback(event):
         selected_date += convert_in2_2bytes(MONTH) + '-'
         selected_date += convert_in2_2bytes(str(event.widget['text']))
         print(selected_date)
-        sendMeeting(selected_date)
+
+        if mode == "ZAITAKU":
+            zaitaku(selected_date)
+
 
 # 1桁の数字を2バイトに変換する関数
 # 追記 https://teratail.com/questions/234639#reply-355304
