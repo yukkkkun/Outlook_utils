@@ -1,0 +1,5 @@
+SENDTO = 'test@test.co.jp'
+SUBJECT = 'subject'
+BODY = 'body'
+START_TIME = '8:30'
+DURATION = '540'
