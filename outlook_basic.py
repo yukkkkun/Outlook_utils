@@ -31,7 +31,7 @@ def sendEmail(sendto, subject, body):
 
 #   Msg.Send()
 
-def sendMeeting(dateandtime, subject, body): 
+def sendMeeting(sendto, dateandtime, subject, body): 
     str_dateandtime = str(dateandtime)   
     appt = outlook.CreateItem(1) # AppointmentItem
     appt.AllDayEvent = True
@@ -41,7 +41,7 @@ def sendMeeting(dateandtime, subject, body):
     appt.Location = "Location Name"
     appt.MeetingStatus = 1 # 1 - olMeeting; Changing the appointment to meeting. Only after changing the meeting status recipients can be added
     
-    appt.Recipients.Add("test@test.com") # Don't end ; as delimiter
+    appt.Recipients.Add(sendto) # Don't end ; as delimiter
     
     appt.Body = body
 

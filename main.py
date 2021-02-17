@@ -4,10 +4,13 @@ import win32com.client
 import tkinter as tk
 import win32com.client
 from datetime import datetime
+import threading
 
 #my module
 import outlook_basic
 import mode
+import chrome
+
 
 
 mode_selected = "ZAITAKU"
@@ -249,6 +252,8 @@ def callback(event):
         selected_date += convert_in2_2bytes(str(event.widget['text']))
         print(selected_date)
 
+
+
         if mode_selected == "ZAITAKU":
             mode.zaitaku(selected_date)
 
@@ -262,13 +267,21 @@ def convert_in2_2bytes(str_number):
         return str_number
 
 
-if __name__=="__main__":
 
-    # ルートフレームの定義      
+if __name__=="__main__":
+    
+    def thread_chrome():
+        chrome.open_with_extensions()
+
+    # t1 = threading.Thread(target=thread_outlook)
+    thread1 = threading.Thread(target=thread_chrome)
+
+    # t1.start()
+    thread1.start()
+
+    # ルートフレームの定義   
     root = tk.Tk()
     root.title("Calendar App")
     mycal = mycalendar(root)
     mycal.pack()
-    root.mainloop()
-
-    # sendMeeting()
+    root.mainloop()    # sendMeeting()

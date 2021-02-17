@@ -5,21 +5,29 @@ from datetime import datetime
 
 #my module
 import outlook_basic
-
+import chrome
 
 def zaitaku(dateandtime):
     
+    with open('contents.txt') as f:
+        for line in f.readlines():
+            globals()["{0:s}".format(line.split()[0])] = line.split()[2]
 
-    subject = '在住'
-    body = '''
-    
-    在宅勤務をさせていただきます。
-    
-    
-    '''
+    sendto = globals()['SENDTO']
+    subject = globals()['SUBJECT']
+    body = globals()['BODY']
+    start_time = globals()['START_TIME']
+    duration = int(globals()['DURATION'][1:-1])
 
-    outlook_basic.sendMeeting(dateandtime, subject, body)
-
-    start_time = dateandtime + ' 8:30'
-    duration = 540
+    print(type(dateandtime))
+    print(start_time)
+    start_time = str(dateandtime) + ' ' + start_time[1:-1]
+    print(start_time)
+    # duration = 540
     outlook_basic.add_outlook_schedule(start_time, duration, body)
+
+    outlook_basic.sendMeeting(sendto ,dateandtime, subject, body)
+
+
+if __name__=="__main__":
+    zaitaku(20210217)
